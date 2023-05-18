@@ -23,7 +23,7 @@ class PropertyServiceTest {
     @Test
     void whenPropertyToCreateAlreadyExistsThenThrows() {
         var id = 11l;
-        var toCreate = new Property(id, "Title", "seller", 1119.90);
+        var toCreate = Property.of(id, "Title", "seller", 1119.90);
         when(repository.existsById(id)).thenReturn(true);
         assertThatThrownBy(() -> service.addPropertyToCatalog(toCreate))
                 .isInstanceOf(PropertyAlreadyExistsException.class)

@@ -25,14 +25,14 @@ public class PropertyValidationTests {
 
     @Test
     void whenAllFieldsCorrectThenValidationSucceeds() {
-        var property = new Property(1l, "Title", "seller", 9.90);
+        var property = Property.of(1l, "Title", "seller", 9.90);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).isEmpty();
     }
 
     @Test
     void whenIdNotDefinedThenValidationFails() {
-        var property = new Property(null, "Title", "seller", 9.90);
+        var property = Property.of(null, "Title", "seller", 9.90);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         List<String> constraintViolationMessages = violations.stream()
@@ -44,7 +44,7 @@ public class PropertyValidationTests {
 
     @Test
     void whenTitleIsNotDefinedThenValidationFails() {
-        var property = new Property(1l, "", "seller", 9.90);
+        var property = Property.of(1l, "", "seller", 9.90);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage())
@@ -53,7 +53,7 @@ public class PropertyValidationTests {
 
     @Test
     void whenSellerIsNotDefinedThenValidationFails() {
-        var property = new Property(1l, "title", "", 9.90);
+        var property = Property.of(1l, "title", "", 9.90);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage())
@@ -62,7 +62,7 @@ public class PropertyValidationTests {
 
     @Test
     void whenPriceIsNotDefinedThenValidationFails() {
-        var property = new Property(1l, "title", "seller", null);
+        var property = Property.of(1l, "title", "seller", null);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage())
@@ -71,7 +71,7 @@ public class PropertyValidationTests {
 
     @Test
     void whenPriceDefinedButZeroThenValidationFails() {
-        var property = new Property(1l, "title", "seller", 0.0);
+        var property = Property.of(1l, "title", "seller", 0.0);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage())
@@ -80,7 +80,7 @@ public class PropertyValidationTests {
 
     @Test
     void whenPriceDefinedButNegativeThenValidationFails() {
-        var property = new Property(1l, "title", "seller", -9.90);
+        var property = Property.of(1l, "title", "seller", -9.90);
         Set<ConstraintViolation<Property>> violations = validator.validate(property);
         assertThat(violations).hasSize(1);
         assertThat(violations.iterator().next().getMessage())

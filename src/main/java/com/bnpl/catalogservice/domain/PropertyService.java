@@ -36,7 +36,11 @@ public class PropertyService {
                             existing.id(),
                             property.title(),
                             property.seller(),
-                            property.price());
+                            property.price(),
+                            existing.version(),
+                            existing.createdDate(),
+                            existing.lastModifiedDate(),
+                            property.category());
                     return repository.save(toUpdate);
                 })
                 .orElseGet(() -> addPropertyToCatalog(property));

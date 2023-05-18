@@ -17,7 +17,7 @@ public class PropertyJsonTests {
 
     @Test
     void testSerialize() throws Exception {
-        var property = new Property(1l, "Title", "seller", 9.90);
+        var property = Property.of(1l, "Title", "seller", 9.90);
         var jsonContent = json.write(property);
         assertThat(jsonContent).extractingJsonPathNumberValue("@.id")
                 .isEqualTo(property.id().intValue());
@@ -27,6 +27,8 @@ public class PropertyJsonTests {
                 .isEqualTo(property.seller());
         assertThat(jsonContent).extractingJsonPathNumberValue("@.price")
                 .isEqualTo(property.price());
+        assertThat(jsonContent).extractingJsonPathNumberValue("@.version")
+                .isEqualTo(property.version());
     }
 
     @Test
@@ -36,12 +38,13 @@ public class PropertyJsonTests {
                     "id": 1,
                     "title": "Title",
                     "seller": "seller",
-                    "price": 9.90
+                    "price": 9.90,
+                    "version": 0
                 }
                 """;
         assertThat(json.parse(content))
                 .usingRecursiveComparison()
-                .isEqualTo(new Property(1L, "Title", "seller", 9.90));
+                .isEqualTo(Property.of(1L, "Title", "seller", 9.90));
     }
 
 }

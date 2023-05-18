@@ -4,11 +4,13 @@ import com.bnpl.catalogservice.domain.Property;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("integration")
 class CatalogServiceApplicationTests {
 
     @Autowired
@@ -17,7 +19,7 @@ class CatalogServiceApplicationTests {
     @Test
     void whenGetRequestWithIdThenPropertyReturned() {
         var id = 2l;
-        var toCreate = new Property(id, "Title", "seller", 9.90);
+        var toCreate = Property.of(id, "Title", "seller", 9.90);
         Property expected = webTestClient
                 .post()
                 .uri("/properties")
@@ -42,7 +44,7 @@ class CatalogServiceApplicationTests {
     void whenPostRequestThenPropertyCreated() {
 
         var id = 3l;
-        var expected = new Property(id, "Title", "seller", 9.90);
+        var expected = Property.of(id, "Title", "seller", 9.90);
 
         webTestClient
                 .post()
@@ -59,7 +61,7 @@ class CatalogServiceApplicationTests {
     @Test
     void whenPutRequestThenPropertyUpdated() {
         var id = 1l;
-        var toCreate = new Property(id, "Title", "seller", 9.90);
+        var toCreate = Property.of(id, "Title", "seller", 9.90);
         Property created = webTestClient
                 .post()
                 .uri("/properties")
@@ -68,7 +70,7 @@ class CatalogServiceApplicationTests {
                 .expectStatus().isCreated()
                 .expectBody(Property.class).value(property -> assertThat(property).isNotNull())
                 .returnResult().getResponseBody();
-        var toUpdate = new Property(created.id(), created.title(), created.seller(), 7.95);
+        var toUpdate = Property.of(created.id(), created.title(), created.seller(), 7.95);
 
         webTestClient
                 .put()
@@ -85,7 +87,7 @@ class CatalogServiceApplicationTests {
     @Test
     void whenDeleteRequestThenPropertyDeleted() {
         var id = 4l;
-        var toCreate = new Property(id, "Title", "seller", 9.90);
+        var toCreate = Property.of(id, "Title", "seller", 9.90);
         webTestClient
                 .post()
                 .uri("/properties")

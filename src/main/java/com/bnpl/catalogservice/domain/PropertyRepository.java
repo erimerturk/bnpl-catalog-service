@@ -1,12 +1,15 @@
 package com.bnpl.catalogservice.domain;
 
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
-public interface PropertyRepository {
+@Repository
+public interface PropertyRepository extends CrudRepository<Property, Long> {
 
-    Iterable<Property> findAll();
     Optional<Property> findById(Long id);
     boolean existsById(Long id);
-    Property save(Property property);
     void deleteById(Long id);
 }
