@@ -32,7 +32,7 @@ jobs:
         with:
           path: "${{ github.workspace }}"
           fail-build: false
-#          severity-cutoff: high
+          severity-cutoff: critical
       - name: Upload vulnerability report
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
@@ -40,7 +40,6 @@ jobs:
           sarif_file: ${{ steps.scan.outputs.sarif }}
   package:
     name: Package and Publish
-    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [ build ]
     runs-on: ubuntu-22.04
     permissions:
@@ -67,7 +66,7 @@ jobs:
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           fail-build: false
-#          severity-cutoff: high
+          severity-cutoff: critical
       - name: Upload vulnerability report
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
