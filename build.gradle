@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.0.6'
+    id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -68,4 +68,15 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+//tasks.named('bootBuildImage') {
+//    if (System.getProperty( "os.arch" ).toLowerCase().startsWith('aarch')) {
+//        builder = "ghcr.io/thomasvitale/java-builder-arm64"
+//    }
+//    builder = "paketobuildpacks/builder:tiny"
+//}
+
+bootRun {
+    systemProperty 'bnpl.testdata.enabled', 'true'
 }
