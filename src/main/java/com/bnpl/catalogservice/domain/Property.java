@@ -3,10 +3,7 @@ package com.bnpl.catalogservice.domain;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 
 import java.time.Instant;
 
@@ -32,13 +29,19 @@ public record Property(
         @LastModifiedDate
         Instant lastModifiedDate,
 
+        @CreatedBy
+        String createdBy,
+
+        @LastModifiedBy
+        String lastModifiedBy,
+
         String category
 
 )
 {
 
         public static Property of(Long id, String title, String seller, Double price){
-                return new Property(id, title, seller, price, 0, null, null, null);
+                return new Property(id, title, seller, price, 0, null, null, null, null, null);
         }
 
 }

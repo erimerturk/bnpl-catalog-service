@@ -5,7 +5,7 @@ metadata:
   labels:
     app: bnpl-catalog-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: bnpl-catalog-service
@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: bnpl-catalog-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /actuator/prometheus
+        prometheus.io/port: "9001"
     spec:
       containers:
         - name: bnpl-catalog-service
@@ -27,9 +31,25 @@ spec:
           env:
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
-            - name: SPRING_CLOUD_CONFIG_URI
-              value: http://bnpl-config-service
-            - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://bnpl-postgres/bnpldb_catalog
             - name: SPRING_PROFILES_ACTIVE
               value: testdata
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9001
+            initialDelaySeconds: 50
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 9001
+            initialDelaySeconds: 45
+            periodSeconds: 15
+          volumeMounts:
+            - name: bnpl-catalog-config-volume
+              mountPath: /workspace/config
+      volumes:
+        - name: bnpl-catalog-config-volume
+          configMap:
+            name: bnpl-catalog-config
+

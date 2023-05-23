@@ -1,23 +1,18 @@
 package com.bnpl.catalogservice.domain;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import com.bnpl.catalogservice.config.DataConfig;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -86,6 +81,27 @@ class PropertyRepositoryJdbcTests {
         repository.deleteById(id);
 
         assertThat(jdbcAggregateTemplate.findById(persisted.id(), Property.class)).isNull();
+    }
+
+    @Test
+    @WithMockUser("dddd")
+    void whenCreatePropertyAuthenticatedThenAuditMetadata() {
+        var id = 555l;
+        var toCreate = Property.of(id, "Title", "seller", 12.90);
+        var persisted = jdbcAggregateTemplate.insert(toCreate);
+
+        assertThat(persisted.createdBy()).isEqualTo("dddd");
+        assertThat(persisted.lastModifiedBy()).isEqualTo("dddd");
+    }
+
+    @Test
+    void whenCreatePropertyNotAuthenticatedThenNoAuditMetadata() {
+        var id = 555l;
+        var toCreate = Property.of(id, "Title", "seller", 12.90);
+        var persisted = jdbcAggregateTemplate.insert(toCreate);
+
+        assertThat(persisted.createdBy()).isNull();
+        assertThat(persisted.lastModifiedBy()).isNull();
     }
 
 }

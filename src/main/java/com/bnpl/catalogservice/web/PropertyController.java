@@ -3,6 +3,8 @@ package com.bnpl.catalogservice.web;
 import com.bnpl.catalogservice.domain.Property;
 import com.bnpl.catalogservice.domain.PropertyService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("properties")
 public class PropertyController {
+    private static final Logger log = LoggerFactory.getLogger(PropertyController.class);
+
     private final PropertyService propertyService;
 
     public PropertyController(PropertyService propertyService) {
@@ -18,6 +22,7 @@ public class PropertyController {
 
     @GetMapping
     public Iterable<Property> get() {
+        log.info("Fetching list of properties int the catalog");
         return propertyService.viewPropertyList();
     }
 

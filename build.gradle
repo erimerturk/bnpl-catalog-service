@@ -21,6 +21,8 @@ configurations {
 ext {
     set('springCloudVersion', "2022.0.2")
     set('testContainersVersion', "1.17.3")
+    set('testKeycloakVersion', "2.4.0")
+    set('otelVersion', "1.26.0")
 }
 
 dependencies {
@@ -30,23 +32,30 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.flywaydb:flyway-core'
 //
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    testImplementation 'org.testcontainers:testcontainers'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.postgresql:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
 }
 
 bootBuildImage {
+    builder = "dashaun/builder:tiny"
     imageName = "${project.name}"
     environment = ["BP_JVM_VERSION" : "17.*"]
 

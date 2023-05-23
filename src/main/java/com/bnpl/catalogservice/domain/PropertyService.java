@@ -40,6 +40,8 @@ public class PropertyService {
                             existing.version(),
                             existing.createdDate(),
                             existing.lastModifiedDate(),
+                            existing.createdBy(),
+                            existing.lastModifiedBy(),
                             property.category());
                     return repository.save(toUpdate);
                 })
